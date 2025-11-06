@@ -37,33 +37,7 @@ vim.schedule(function()
 end)
 
 -- Custom LSP
-
-vim.lsp.config('rust_analyzer', {
-    on_attach = function(client, bufnr)
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-    end,
-    settings = {
-        ['rust-analyzer'] = {
-            diagnostics = {
-                enable = false;
-            },
-            imports = {
-                granularity = {
-                    group = "module",
-                },
-                prefix = "self",
-            },
-            cargo = {
-                buildScripts = {
-                    enable = true,
-                },
-            },
-            procMacro = {
-                enable = true
-            },
-        }
-    }
-})
+vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('clangd')
 vim.lsp.enable('pyright')
 vim.lsp.enable('eslint')
