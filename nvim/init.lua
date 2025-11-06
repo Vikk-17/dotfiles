@@ -5,8 +5,8 @@ vim.g.mapleader = " "
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
-  local repo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+    local repo = "https://github.com/folke/lazy.nvim.git"
+    vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
 end
 
 vim.opt.rtp:prepend(lazypath)
@@ -15,14 +15,14 @@ local lazy_config = require "configs.lazy"
 
 -- load plugins
 require("lazy").setup({
-  {
-    "NvChad/NvChad",
-    lazy = false,
-    branch = "v2.5",
-    import = "nvchad.plugins",
-  },
+    {
+        "NvChad/NvChad",
+        lazy = false,
+        branch = "v2.5",
+        import = "nvchad.plugins",
+    },
 
-  { import = "plugins" },
+    { import = "plugins" },
 }, lazy_config)
 
 -- load theme
@@ -33,20 +33,37 @@ require "options"
 require "autocmds"
 
 vim.schedule(function()
-  require "mappings"
+    require "mappings"
 end)
 
+-- Custom LSP
 
-vim.lsp.config['rust-analyzer'] = {
-  settings = {
-    ['rust-analyzer'] = {
-      diagnostics = {
-        enable = false;
-      }
+vim.lsp.config('rust_analyzer', {
+    on_attach = function(client, bufnr)
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    end,
+    settings = {
+        ['rust-analyzer'] = {
+            diagnostics = {
+                enable = false;
+            },
+            imports = {
+                granularity = {
+                    group = "module",
+                },
+                prefix = "self",
+            },
+            cargo = {
+                buildScripts = {
+                    enable = true,
+                },
+            },
+            procMacro = {
+                enable = true
+            },
+        }
     }
-  }
-
-}
+})
 vim.lsp.enable('clangd')
 vim.lsp.enable('pyright')
 vim.lsp.enable('eslint')
@@ -58,3 +75,4 @@ vim.lsp.enable('sqls')
 vim.lsp.enable('markdown_oxide')
 vim.lsp.enable('jsonls')
 vim.lsp.enable('asm_lsp')
+vim.lsp.enable('taplo')
