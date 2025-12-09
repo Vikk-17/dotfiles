@@ -13,19 +13,28 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 14
+font pango:Hack 14
 
+# You can remove the this for bar that you used to get while using multiple app in $mod + w mode
+# default_border pixel 2
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
-exec_always --no-startup-id killall polybar
-exec_always --no-startup-id "~/.config/polybar/launch.sh"
-exec --no-startup-id picom
-exec --no-startup-id feh --bg-scale ~/Pictures/background.jpg 
+# exec_always --no-startup-id killall polybar
+# exec_always --no-startup-id "~/.config/polybar/launch.sh"
+
+# Add this line BEFORE the picom execution command
+exec --no-startup-id nvidia-settings -a 'AllowFlipping=0'
+# Ensure picom starts with these flags
+exec_always --no-startup-id picom -b
+
+# exec --no-startup-id picom
+# exec --no-startup-id feh --bg-scale  ~/Pictures/background.jpg
+# Set wallpaper for eDP-1 (secondary) and HDMI-1 (primary)
+# exec_always --no-startup-id feh --bg-fill ~/Pictures/background.jpg --bg-fill ~/Pictures/background2.jpg
+
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id xinput set-prop "MSFT0001:01 04F3:31AD Touchpad" "libinput Natural Scrolling Enabled" 1
@@ -37,7 +46,7 @@ exec --no-startup-id xinput set-prop "MSFT0001:01 04F3:31AD Touchpad" "libinput 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
+exec_always --no-startup-id ~/.screenlayout/auto.sh
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
@@ -195,6 +204,6 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-# bar {
-#         status_command i3status
-# }
+bar {
+        status_command i3status
+}

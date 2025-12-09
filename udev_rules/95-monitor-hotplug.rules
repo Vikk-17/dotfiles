@@ -1,0 +1,2 @@
+# Rule to trigger monitor-hotplug.sh on graphics change (plug/unplug)
+ACTION=="change", SUBSYSTEM=="drm", RUN+="/usr/local/bin/monitor-hotplug.sh"
