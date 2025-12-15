@@ -24,42 +24,66 @@ return {
     },
     {
         'mrcjkb/rustaceanvim',
-        version = '^6', -- Recommended
-        lazy = false, -- This plugin is already lazy
-        ['rust-analyzer'] = {
-            diagnostics = {
-                enable = false;
-            },
-            imports = {
-                granularity = {
-                    group = "module",
+        version = '^6',
+        lazy = false,   -- This plugin must not be lazy loaded
+        config = function()
+            vim.g.rustaceanvim = {
+                server = {
+                    cmd = function()
+                        local ra_binary = vim.fn.exepath("rust-analyzer")
+                        return { "bash", "-c", "RAYON_NUM_THREADS=4 " .. ra_binary }
+                    end,
+                    default_settings = {
+                        -- rust-analyzer language server configuration
+                        ['rust-analyzer'] = {
+                            -- OPTIMIZATION 1: Limit cache usage
+                            lru = {
+                                capacity = 32,
+                            },
+                            -- OPTIMIZATION 2: Disable initial full project scan
+                            cachePriming = {
+                                enable = false,
+                            },
+                            -- OPTIMIZATION 3: Disable procMacros (Saves massive RAM, but disables some autocompletes)
+                            procMacro = {
+                                enable = false,
+                            },
+                            cargo = {
+                                -- OPTIMIZATION 4: Do NOT use allFeatures (High RAM usage)
+                                allFeatures = false,
+                                buildScripts = {
+                                    enable = false,
+                                },
+                            },
+                            checkOnSave = {
+                                -- command = "clippy",
+                                enable = false,
+                            },
+                            diagnostics = {
+                                enable = true, -- I suggest keeping this true, or LSP is useless
+                            },
+                            imports = {
+                                granularity = {
+                                    group = "module",
+                                },
+                                prefix = "self",
+                            },
+                            files = {
+                                excludeDirs = {
+                                    ".git",
+                                    ".cargo",
+                                    "target",
+                                    "node_modules",
+                                    "dist",
+                                    "build"
+                                },
+                            },
+                        },
+                    },
                 },
-                prefix = "self",
-            },
-            cargo = {
-                buildScripts = {
-                    enable = true,
-                },
-                allFeatures = true,
-            },
-            procMacro = {
-                enable = true
-            },
-            checkOnSave = {
-                command = "clippy",
-            },
-            inlay_hints = {
-                auto = true,
-                show_parameter_hints = false,
-                parameter_hints_prefix = "",
-                other_hints_prefix = "",
-            },
-            runnables = {
-                use_telescope = true,
-            },
-        }
+            }
+        end
     },
-
   -- test new blink
   -- { import = "nvchad.blink.lazyspec" },
 
