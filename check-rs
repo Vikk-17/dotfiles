@@ -2,19 +2,12 @@
 
 set -euo pipefail
 
-set -euo pipefail
-
 if [[ $# -ne 1 ]]; then
     echo "Usage: $0 <rust-project-directory>"
     exit 1
 fi
 
 PROJECT_DIR="$1"
-
-if [[ ! -d "$PROJECT_DIR" ]]; then
-    echo "Error: Directory '$PROJECT_DIR' does not exist."
-    exit 1
-fi
 
 if [[ ! -f "$PROJECT_DIR/Cargo.toml" ]]; then
     echo "Error: '$PROJECT_DIR' is not a Rust project (Cargo.toml not found)."
@@ -31,6 +24,7 @@ run() {
     "$@"
 }
 
+# Add commands
 run cargo fmt --all -- --check
 run cargo clippy -- -D warnings
 run cargo test --release -- --test-threads=1
@@ -38,4 +32,5 @@ run cargo test --release -- --test-threads=1
 echo
 echo "[+] All Rust quality checks passed."
 
-# To run this file goto the current project dir and run `check-rs .`
+# Put this file into /usr/sbin/ and make it a+x or 777
+# From the project dir run, check-rs .
