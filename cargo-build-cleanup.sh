@@ -1,5 +1,4 @@
-```bash
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -euo pipefail
 
@@ -96,4 +95,3 @@ if [[ "$DRY_RUN" == true ]]; then
 else
     echo "Cargo build directories cleaned."
 fi
-```
